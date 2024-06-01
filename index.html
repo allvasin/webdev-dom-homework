@@ -1,71 +1,131 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Проект "Комменты"</title>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
 
-  <body>
-    <div class="container">
-      <ul class="comments">
-        <li class="comment">
-          <div class="comment-header">
-            <div>Глеб Фокин</div>
-            <div>12.02.22 12:18</div>
-          </div>
-          <div class="comment-body">
-            <div class="comment-text">
-              Это будет первый комментарий на этой странице
-            </div>
-          </div>
-          <div class="comment-footer">
-            <div class="likes">
-              <span class="likes-counter">3</span>
-              <button class="like-button"></button>
-            </div>
-          </div>
-        </li>
-        <li class="comment">
-          <div class="comment-header">
-            <div>Варвара Н.</div>
-            <div>13.02.22 19:22</div>
-          </div>
-          <div class="comment-body">
-            <div class="comment-text">
-              Мне нравится как оформлена эта страница! ❤
-            </div>
-          </div>
-          <div class="comment-footer">
-            <div class="likes">
-              <span class="likes-counter">75</span>
-              <button class="like-button -active-like"></button>
-            </div>
-          </div>
-        </li>
-      </ul>
-      <div class="add-form">
-        <input
-          type="text"
-          class="add-form-name"
-          placeholder="Введите ваше имя"
-        />
-        <textarea
-          type="textarea"
-          class="add-form-text"
-          placeholder="Введите ваш коментарий"
-          rows="4"
-        ></textarea>
-        <div class="add-form-row">
-          <button class="add-form-button">Написать</button>
+<head>
+  <title>Проект "Комменты"</title>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div class="container">
+    <ul class="comments" id="old-commit">
+      <li class="comment">
+        <div class="comment-header">
+          <div>Глеб Фокин</div>
+          <div>12.02.22 12:18</div>
         </div>
+        <div class="comment-body">
+          <div class="comment-text">
+            Это будет первый комментарий на этой странице
+          </div>
+        </div>
+        <div class="comment-footer">
+          <div class="likes">
+            <span class="likes-counter">3</span>
+            <button class="like-button"></button>
+          </div>
+        </div>
+      </li>
+      <li class="comment">
+        <div class="comment-header">
+          <div>Варвара Н.</div>
+          <div>13.02.22 19:22</div>
+        </div>
+        <div class="comment-body">
+          <div class="comment-text">
+            Мне нравится как оформлена эта страница! ❤
+          </div>
+        </div>
+        <div class="comment-footer">
+          <div class="likes">
+            <span class="likes-counter">75</span>
+            <button class="like-button -active-like"></button>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <div class="add-form">
+      <input id="name-input" type="text" class="add-form-name" placeholder="Введите ваше имя" />
+      <textarea id="text-input" type="textarea" class="add-form-text" placeholder="Введите ваш коментарий"
+        rows="4"></textarea>
+      <div class="add-form-row">
+        <button id="add-button" class="add-form-button">Написать</button>
       </div>
     </div>
-  </body>
+  </div>
+</body>
 
-  <script>
-    "use strict";
-    // Код писать здесь
-    console.log("It works!");
-  </script>
+<script>
+  "use strict";
+
+  // Код писать здесь
+  const buttonElement = document.getElementById("add-button");
+  const oldCommitElement = document.getElementById("old-commit");
+  const nameInputElement = document.getElementById("name-input");
+  const textInputElement = document.getElementById("text-input");
+
+  //Получаем дату и преобразуем в нужный вид
+  Number.prototype.format = function () {
+    if (this < 10)
+      return `0${this}`
+    else
+      return `${this}`
+  };
+
+  Date.prototype.format = function () {
+    const result = `${this.getDate().format()}.${(this.getMonth() + 1).format()}.${this.getFullYear().toString().substring(2)} ${this.getHours().format()}:${this.getMinutes().format()}`
+    return result
+  };
+
+//Обработка нажатия кнопки Написать
+  buttonElement.addEventListener("click", () => {
+    let toDay = new Date().format() 
+    nameInputElement.style.backgroundColor = '';
+    textInputElement.style.backgroundColor = '';
+
+    const name = nameInputElement.value.trim()
+    const comment = textInputElement.value.trim()
+
+    let wasError = false;
+
+    if (name === ``) {
+      nameInputElement.style.backgroundColor = 'red';
+      wasError = true;
+    }
+    if (comment === ``) {
+      textInputElement.style.backgroundColor = 'red';
+      wasError = true;
+    }
+    
+    if (wasError) {
+      return
+    }
+
+    const oldCommit = oldCommitElement.innerHTML;
+    oldCommitElement.innerHTML = oldCommit +
+      `<li class="comment">
+        <div class="comment-header">
+          <div>${name}</div>
+          <div> ${toDay} </div>
+        </div>
+        <div class="comment-body">
+          <div class="comment-text">
+            ${comment}
+          </div>
+        </div>
+        <div class="comment-footer">
+          <div class="likes">
+            <span class="likes-counter">0</span>
+            <button class="like-button"></button>
+          </div>
+        </div>
+      </li>`;
+
+    nameInputElement.value = "";
+    textInputElement.value = "";
+  });
+
+</script>
+
 </html>
